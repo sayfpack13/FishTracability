@@ -319,6 +319,31 @@ app.post('/addPesheur', async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   });
+
+  app.post('/getPesheurFWallet', async (req, res) => {
+    const wallet = req.body.wallet;
+   
+
+    try {
+      const transaction = await contract.methods.pesheurs(wallet).call();
+      res.json({ data:transaction });
+      
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+  app.post('/getVetFWallet', async (req, res) => {
+    const wallet = req.body.wallet;
+   
+
+    try {
+      const transaction = await contract.methods.Veters(wallet).call();
+      res.json({ data:transaction });
+      
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
   
   // Buy a package (POST request)
   app.post('/buyPackage', async (req, res) => {

@@ -135,4 +135,5 @@ contract FishTraceability {
         
         fishPackages[_packid].qualityControlApproval = true;
     }
+    
 }

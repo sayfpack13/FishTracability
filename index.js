@@ -7,7 +7,7 @@ app.use(express.json());
 
 // Replace 'YOUR_SMART_CONTRACT_ABI' and 'YOUR_SMART_CONTRACT_ADDRESS' with actual values
 const contractABI = require('./contract.json'); 
-const contractAddress = "0x00c13db1AFE5Ad302C05F02314e2Dd42c32f2A38";
+const contractAddress = "0x248444257CB116205B6099cf9E2998A39ed3dE07";
 const marketplaceAbi = require('./marketplace.json'); // Replace this with the actual ABI of your FishMarketplace smart contract
 const marketplaceAddress = '0xaAAaD29282Bac09a09835d98cf7E3F8255db5719'; // Replace this with the actual address of your FishMarketplace smart contract
 const traceabilityAddress = contractAddress; // Replace this with the actual address of your FishTraceability smart contract
@@ -107,7 +107,52 @@ app.post('/addPesheur', async (req, res) => {
    
   });
 
+  app.post('/addMarayeur', async (req, res) => {
 
+    const gasPrice = await provider.getFeeData();
+    console.log(gasPrice);
+
+    const wallet = req.body.wallet;
+    const name = req.body.name;
+    const lastName = req.body.lastName;
+    const MarID = req.body.MarID;
+
+      const transaction = contract.methods.addMar(wallet,name, lastName,MarID).encodeABI();
+      const receipt = await sendTransaction(AdminPrivKey, {from:AdminAddress, to: contractAddress, data: transaction,
+      maxPriorityFeePerGas: web3.utils.toHex(
+        Number(gasPrice.maxPriorityFeePerGas)
+      ),
+ 
+      maxFeePerGas: web3.utils.toHex(
+        Number(gasPrice.maxFeePerGas)
+      ),
+      gas: ethers.BigNumber.from(400000).toHexString() });
+      res.json({ transactionHash: receipt.transactionHash });
+   
+  });
+  app.post('/ModMarayeur', async (req, res) => {
+
+    const gasPrice = await provider.getFeeData();
+    console.log(gasPrice);
+
+    const wallet = req.body.wallet;
+    const name = req.body.name;
+    const lastName = req.body.lastName;
+    const MarId = req.body.MarId;
+
+      const transaction = contract.methods.ModifMar(wallet,name, lastName,MarId).encodeABI();
+      const receipt = await sendTransaction(AdminPrivKey, {from:AdminAddress, to: contractAddress, data: transaction,
+      maxPriorityFeePerGas: web3.utils.toHex(
+        Number(gasPrice.maxPriorityFeePerGas)
+      ),
+ 
+      maxFeePerGas: web3.utils.toHex(
+        Number(gasPrice.maxFeePerGas)
+      ),
+      gas: ethers.BigNumber.from(400000).toHexString() });
+      res.json({ transactionHash: receipt.transactionHash });
+   
+  });
   app.post('/ModVet', async (req, res) => {
 
     const gasPrice = await provider.getFeeData();
@@ -256,6 +301,74 @@ app.post('/addPesheur', async (req, res) => {
   });
   
   // Approve by veterinary (POST request)
+  
+  app.post('/refuseByVeterinary', async (req, res) => {
+    const packID = req.body.packID;
+    const gasPrice = await provider.getFeeData();
+
+    try {
+      const transaction = contract.methods.refuseByVeterinary(packID).encodeABI();
+      const receipt = await sendTransaction(AdminPrivKey, {from:AdminAddress,to: contractAddress, data: transaction  ,  maxPriorityFeePerGas: web3.utils.toHex(
+        Number(gasPrice.maxPriorityFeePerGas)
+      ),
+ 
+      maxFeePerGas: web3.utils.toHex(
+        Number(gasPrice.maxFeePerGas)
+      ),
+      gas: ethers.BigNumber.from(400000).toHexString() });
+      res.json({ transactionHash: receipt.transactionHash });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+  app.post('/affecterPechToMarayeur', async (req, res) => {
+    const pechID = req.body.pechID;
+    const Marrayeur = req.body.Marrayeur;
+    const gasPrice = await provider.getFeeData();
+
+    try {
+      const transaction = contract.methods.affecterPechToMarayeur(pechID,Marrayeur).encodeABI();
+      const receipt = await sendTransaction(AdminPrivKey, {from:AdminAddress,to: contractAddress, data: transaction  ,  maxPriorityFeePerGas: web3.utils.toHex(
+        Number(gasPrice.maxPriorityFeePerGas)
+      ),
+ 
+      maxFeePerGas: web3.utils.toHex(
+        Number(gasPrice.maxFeePerGas)
+      ),
+      gas: ethers.BigNumber.from(400000).toHexString() });
+      res.json({ transactionHash: receipt.transactionHash });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post('/prepLotPminPmax', async (req, res) => {
+    const lotID = req.body.lotID;
+    const minPrice =req.body.minPrice;
+    const maxPrice =req.body.maxPrice;
+    const BigMin = (parseFloat(minPrice) * 10**18).toString();
+    const BigMax = (parseFloat(maxPrice) * 10**18).toString()
+
+    const gasPrice = await provider.getFeeData();
+
+    try {
+      const transaction = contract.methods.prepLot(lotID,BigMin,BigMax).encodeABI();
+      const receipt = await sendTransaction(AdminPrivKey, {from:AdminAddress,to: contractAddress, data: transaction  ,  maxPriorityFeePerGas: web3.utils.toHex(
+        Number(gasPrice.maxPriorityFeePerGas)
+      ),
+ 
+      maxFeePerGas: web3.utils.toHex(
+        Number(gasPrice.maxFeePerGas)
+      ),
+      gas: ethers.BigNumber.from(400000).toHexString() });
+      res.json({ transactionHash: receipt.transactionHash });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  
+
   app.post('/approveByVeterinary', async (req, res) => {
     const packID = req.body.packID;
     const gasPrice = await provider.getFeeData();

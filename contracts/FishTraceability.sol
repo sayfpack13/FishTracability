@@ -18,6 +18,13 @@ contract FishTraceability {
         string VeterinaryID;
         // Add more data fields as required
     }
+     struct Marayeur {
+        string name;
+        string lastName;
+        address wallet;
+        string MarayeurID;
+        // Add more data fields as required
+    }
     
     struct Pech {
         string id;
@@ -30,6 +37,8 @@ contract FishTraceability {
         uint256 dateFin;
         bool closed;
         string imageFish;
+        address Marayeur;
+        
     }
     
     struct FishPackage {
@@ -41,14 +50,19 @@ contract FishTraceability {
         bool veterinaryApproval;
         bool qualityControlApproval;
         string imageFish;
+        uint256 minPrice;
+        uint256 maxPrice;
     }
     
     mapping(address => Pesheur) public pesheurs;
     mapping(address => Veterinary) public Veters;
+    mapping(address => Marayeur) public Mars;
+
     mapping(string => Pech) public pechs;
     mapping(string => FishPackage) public fishPackages;
     uint PecheID=0;
     uint VetIndex = 0;
+    uint MarIndex = 0;
     uint PecheurIndex = 0;
     modifier onlyAdmin() {
         require(msg.sender == admin, "Only the admin can call this function.");
@@ -66,7 +80,21 @@ contract FishTraceability {
     constructor() {
         admin = msg.sender;
     }
-    
+    function addMar(address wallet,string memory _name, string memory _lastName,string memory MId) public onlyAdmin {
+        require(bytes(_name).length != 0, "Name cannot be empty.");
+        require(bytes(_lastName).length != 0, "Last name cannot be empty.");
+        
+        Mars[wallet] = Marayeur(_name, _lastName,wallet,MId);
+        MarIndex++;
+    }
+    function ModifMar(address wallet,string memory _name, string memory _lastName,string memory MId) public onlyAdmin {
+        require(bytes(_name).length != 0, "Name cannot be empty.");
+        require(bytes(_lastName).length != 0, "Last name cannot be empty.");
+        
+        Mars[wallet] = Marayeur(_name, _lastName,wallet,MId);
+        MarIndex++;
+        
+    }
     function addPesheur(address wallet,string memory _name, string memory _lastName,string memory pesheurID) public onlyAdmin {
         require(bytes(_name).length != 0, "Name cannot be empty.");
         require(bytes(_lastName).length != 0, "Last name cannot be empty.");
@@ -100,7 +128,7 @@ contract FishTraceability {
         require(bytes(_enginePhotoHash).length != 0, "Engine photo hash cannot be empty.");
         require(bytes(_engineType).length != 0, "Engine type cannot be empty.");
         
-        pechs[_pechID] = Pech(_pechID,pecheur, _location, _engineTitle, _enginePhotoHash, _engineType, _dateDeb, 0, false,'');
+        pechs[_pechID] = Pech(_pechID,pecheur, _location, _engineTitle, _enginePhotoHash, _engineType, _dateDeb, 0, false,'',address(0));
         PecheID++;
     }
     
@@ -114,7 +142,9 @@ contract FishTraceability {
 
 
     }
-    
+    function affecterPechToMarayeur(string memory pechID,address _marrayeur) public onlyAdmin {
+        pechs[pechID].Marayeur = _marrayeur;
+    }
     function createFishPackage(string memory _pechId,string memory packageID,uint256 _temperature, uint256 _weight, string memory _RFID, string memory _qrcode,string memory imageFish) public onlyAdmin {
         require(bytes(pechs[_pechId].location).length != 0, "Pech with this ID does not exist.");
         require(pechs[_pechId].closed == true, "Pech must be closed before creating fish packages.");
@@ -123,11 +153,23 @@ contract FishTraceability {
         
         fishPackages[packageID] = FishPackage(_pechId, _temperature, _weight, _RFID, _qrcode, false, false,imageFish);
     }
-    
+    function prepLot(string memory packageID,uint256 minPrice,uint256 maxPrice) public onlyAdmin {
+        
+        
+        fishPackages[packageID].minPrice =minPrice;
+        fishPackages[packageID].maxPrice =maxPrice;
+
+
+    }
     function approveByVeterinary(string memory _packid) public onlyAdmin {
         require(fishPackages[_packid].veterinaryApproval == false, "Package is already approved by the veterinarian.");
         
         fishPackages[_packid].veterinaryApproval = true;
+    }
+    function refuseByVeterinary(string memory _packid) public onlyAdmin {
+        require(fishPackages[_packid].veterinaryApproval == false, "Package is already approved by the veterinarian.");
+        
+        fishPackages[_packid].veterinaryApproval = false;
     }
     
     function approveByQualityManager(string memory _packid) public onlyAdmin {

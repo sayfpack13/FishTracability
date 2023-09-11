@@ -1,162 +1,5 @@
 [
 	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "Mars",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "lastName",
-				"type": "string"
-			},
-			{
-				"internalType": "address",
-				"name": "wallet",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "MarayeurID",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "wallet",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "_name",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_lastName",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "vetID",
-				"type": "string"
-			}
-		],
-		"name": "ModVet",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "wallet",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "_name",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_lastName",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "MId",
-				"type": "string"
-			}
-		],
-		"name": "ModifMar",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "wallet",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "_name",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_lastName",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "pesheurID",
-				"type": "string"
-			}
-		],
-		"name": "ModifPesheur",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "Veters",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "lastName",
-				"type": "string"
-			},
-			{
-				"internalType": "address",
-				"name": "wallet",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "VeterinaryID",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -238,19 +81,6 @@
 		"name": "addVet",
 		"outputs": [],
 		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "admin",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -366,6 +196,228 @@
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "pecheur",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_pechID",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_location",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_engineTitle",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_enginePhotoHash",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_engineType",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_dateDeb",
+				"type": "uint256"
+			}
+		],
+		"name": "initiatePech",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_pechId",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_dateDebarq",
+				"type": "uint256"
+			}
+		],
+		"name": "ModDebarquement",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "wallet",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_lastName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "MId",
+				"type": "string"
+			}
+		],
+		"name": "ModifMar",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "wallet",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_lastName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "pesheurID",
+				"type": "string"
+			}
+		],
+		"name": "ModifPesheur",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "wallet",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_lastName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "vetID",
+				"type": "string"
+			}
+		],
+		"name": "ModVet",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "packageID",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "minPrice",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "maxPrice",
+				"type": "uint256"
+			}
+		],
+		"name": "prepLot",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "finalPrice",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "buyer",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "lotId",
+				"type": "string"
+			}
+		],
+		"name": "recordFishSale",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_packid",
+				"type": "string"
+			}
+		],
+		"name": "refuseByVeterinary",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [],
+		"name": "admin",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "string",
 				"name": "",
 				"type": "string"
@@ -430,44 +482,214 @@
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "pecheur",
-				"type": "address"
-			},
-			{
 				"internalType": "string",
-				"name": "_pechID",
+				"name": "",
 				"type": "string"
-			},
+			}
+		],
+		"name": "fishSales",
+		"outputs": [
 			{
 				"internalType": "string",
-				"name": "_location",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_engineTitle",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_enginePhotoHash",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_engineType",
+				"name": "buyer",
 				"type": "string"
 			},
 			{
 				"internalType": "uint256",
-				"name": "_dateDeb",
+				"name": "finalPrice",
 				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "lotId",
+				"type": "string"
 			}
 		],
-		"name": "initiatePech",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "lotId",
+				"type": "string"
+			}
+		],
+		"name": "getLotAndPechData",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "pechId",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "temperature",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "weight",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "RFID",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "qrcode",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "veterinaryApproval",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "qualityControlApproval",
+						"type": "bool"
+					},
+					{
+						"internalType": "string",
+						"name": "imageFish",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "minPrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "maxPrice",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct FishTraceability.FishPackage",
+				"name": "",
+				"type": "tuple"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "id",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "pecheur",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "location",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "engineTitle",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "enginePhotoHash",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "engineType",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "dateDeb",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "dateFin",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "closed",
+						"type": "bool"
+					},
+					{
+						"internalType": "string",
+						"name": "imageFish",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "Marayeur",
+						"type": "address"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "dateDebarquement",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "debarqued",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct FishTraceability.debarquement",
+						"name": "deb",
+						"type": "tuple"
+					}
+				],
+				"internalType": "struct FishTraceability.Pech",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "Mars",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "lastName",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "wallet",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "MarayeurID",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -534,6 +756,23 @@
 				"internalType": "address",
 				"name": "Marayeur",
 				"type": "address"
+			},
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "dateDebarquement",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "debarqued",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct FishTraceability.debarquement",
+				"name": "deb",
+				"type": "tuple"
 			}
 		],
 		"stateMutability": "view",
@@ -576,37 +815,35 @@
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "Veters",
+		"outputs": [
+			{
 				"internalType": "string",
-				"name": "packageID",
+				"name": "name",
 				"type": "string"
 			},
 			{
-				"internalType": "uint256",
-				"name": "minPrice",
-				"type": "uint256"
+				"internalType": "string",
+				"name": "lastName",
+				"type": "string"
 			},
 			{
-				"internalType": "uint256",
-				"name": "maxPrice",
-				"type": "uint256"
-			}
-		],
-		"name": "prepLot",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
+				"internalType": "address",
+				"name": "wallet",
+				"type": "address"
+			},
 			{
 				"internalType": "string",
-				"name": "_packid",
+				"name": "VeterinaryID",
 				"type": "string"
 			}
 		],
-		"name": "refuseByVeterinary",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	}
 ]

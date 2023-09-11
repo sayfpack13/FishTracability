@@ -3,7 +3,12 @@ pragma solidity ^0.8.0;
 
 contract FishTraceability {
     address public admin;
-    
+
+    struct FishSale {
+        string buyer;
+        uint256 finalPrice;
+        string lotId;
+    }
     struct Pesheur {
         string name;
         string lastName;
@@ -25,7 +30,10 @@ contract FishTraceability {
         string MarayeurID;
         // Add more data fields as required
     }
-    
+    struct debarquement{
+        uint256 dateDebarquement;
+        bool debarqued;
+    }
     struct Pech {
         string id;
         address pecheur;
@@ -38,7 +46,8 @@ contract FishTraceability {
         bool closed;
         string imageFish;
         address Marayeur;
-        
+       
+        debarquement deb;
     }
     
     struct FishPackage {
@@ -57,6 +66,7 @@ contract FishTraceability {
     mapping(address => Pesheur) public pesheurs;
     mapping(address => Veterinary) public Veters;
     mapping(address => Marayeur) public Mars;
+    mapping(string => FishSale) public fishSales;
 
     mapping(string => Pech) public pechs;
     mapping(string => FishPackage) public fishPackages;
@@ -86,6 +96,20 @@ contract FishTraceability {
         
         Mars[wallet] = Marayeur(_name, _lastName,wallet,MId);
         MarIndex++;
+    }
+    function recordFishSale(uint256 finalPrice, string memory buyer, string memory lotId) public onlyAdmin(){
+        
+        // Create a new fish sale record
+        FishSale memory sale = FishSale({
+            buyer: buyer,
+            finalPrice: finalPrice,
+            lotId: lotId
+        });
+
+        // Store the fish sale record
+        fishSales[lotId] = sale;
+
+        // Emit an event to log the sale
     }
     function ModifMar(address wallet,string memory _name, string memory _lastName,string memory MId) public onlyAdmin {
         require(bytes(_name).length != 0, "Name cannot be empty.");
@@ -128,7 +152,7 @@ contract FishTraceability {
         require(bytes(_enginePhotoHash).length != 0, "Engine photo hash cannot be empty.");
         require(bytes(_engineType).length != 0, "Engine type cannot be empty.");
         
-        pechs[_pechID] = Pech(_pechID,pecheur, _location, _engineTitle, _enginePhotoHash, _engineType, _dateDeb, 0, false,'',address(0));
+        pechs[_pechID] = Pech(_pechID,pecheur, _location, _engineTitle, _enginePhotoHash, _engineType, _dateDeb, 0, false,'',address(0),debarquement(0,false));
         PecheID++;
     }
     
@@ -142,6 +166,18 @@ contract FishTraceability {
 
 
     }
+    function getLotAndPechData(string memory lotId) public view returns (FishPackage memory,Pech memory) {
+        FishPackage memory lot = fishPackages[lotId];
+        require(bytes(lot.pechId).length != 0, "Lot with this ID does not exist.");
+
+        Pech memory pech = pechs[lot.pechId];
+
+        return ( lot,pech);
+    }
+    function ModDebarquement(string memory _pechId, uint256 _dateDebarq) public onlyAdmin {
+        pechs[_pechId].deb.dateDebarquement = _dateDebarq;
+        pechs[_pechId].deb.debarqued = true;
+    }
     function affecterPechToMarayeur(string memory pechID,address _marrayeur) public onlyAdmin {
         pechs[pechID].Marayeur = _marrayeur;
     }
@@ -151,7 +187,7 @@ contract FishTraceability {
         require(bytes(_RFID).length != 0, "RFID cannot be empty.");
         require(bytes(_qrcode).length != 0, "QR code cannot be empty.");
         
-        fishPackages[packageID] = FishPackage(_pechId, _temperature, _weight, _RFID, _qrcode, false, false,imageFish);
+        fishPackages[packageID] = FishPackage(_pechId, _temperature, _weight, _RFID, _qrcode, false, false,imageFish,0,0);
     }
     function prepLot(string memory packageID,uint256 minPrice,uint256 maxPrice) public onlyAdmin {
         

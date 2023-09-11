@@ -7,7 +7,7 @@ app.use(express.json());
 
 // Replace 'YOUR_SMART_CONTRACT_ABI' and 'YOUR_SMART_CONTRACT_ADDRESS' with actual values
 const contractABI = require('./contract.json'); 
-const contractAddress = "0x248444257CB116205B6099cf9E2998A39ed3dE07";
+const contractAddress = "0x9a6ce1c15eda1D491FfeD710B40c90aCd0407AB7";
 const marketplaceAbi = require('./marketplace.json'); // Replace this with the actual ABI of your FishMarketplace smart contract
 const marketplaceAddress = '0xaAAaD29282Bac09a09835d98cf7E3F8255db5719'; // Replace this with the actual address of your FishMarketplace smart contract
 const traceabilityAddress = contractAddress; // Replace this with the actual address of your FishTraceability smart contract
@@ -19,8 +19,8 @@ const provider = new ethers.providers.JsonRpcProvider('https://polygon-mumbai.bl
 
 const contract = new web3.eth.Contract(contractABI, contractAddress);
 
-const AdminPrivKey = "713b86cbd9689ccc2bd09bf4ca9030e4e3b4e484d7161b05dc45239ebdcaa0eb";
-const AdminAddress = "0x9dD392F9aAa8c9fE1F69B184b586eE9CeF85861D";
+const AdminPrivKey = "5287dc912478bf431893c7f6dcd1357bd28df89003398e4deb7093f2c6c367f3";
+const AdminAddress = "0x0347C3c53368BD90688806E4e2f52e0Ad897004c";
 const marketplaceContract = new web3.eth.Contract(marketplaceAbi, marketplaceAddress);
 async function sendTransaction(privateKey, transactionObject) {
     // const account = web3.eth.accounts.privateKeyToAccount(privateKey);
@@ -82,6 +82,50 @@ app.post('/create-wallet', (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: 'Error creating wallet.' });
   }
+});
+app.post('/recordFishSale', async (req, res) => {
+
+  const gasPrice = await provider.getFeeData();
+
+  const finalPrice = req.body.finalPrice;
+  const userID = req.body.userID;
+  const lotID = req.body.lotID;
+
+    const transaction = contract.methods.recordFishSale(finalPrice,userID,lotID).encodeABI();
+    const receipt = await sendTransaction(AdminPrivKey, {from:AdminAddress, to: contractAddress, data: transaction,
+    maxPriorityFeePerGas: web3.utils.toHex(
+      Number(gasPrice.maxPriorityFeePerGas)
+    ),
+
+    maxFeePerGas: web3.utils.toHex(
+      Number(gasPrice.maxFeePerGas)
+    ),
+    gas: ethers.BigNumber.from(400000).toHexString() });
+    res.json({ transactionHash: receipt.transactionHash });
+ 
+});
+app.post('/getLotAndPechData', async (req, res) => {
+
+
+  const lotID = req.body.lotID;
+
+    const transaction = contract.methods.getLotAndPechData(finalPrice,userID,lotID).call();
+    const [lotData, pecheData] = transaction;
+    const jsonData = JSON.stringify({ lot: lotData, peche: pecheData });
+
+    res.json(jsonData);
+ 
+});
+app.post('/getPrises', async (req, res) => {
+
+
+  const priseID = req.body.priseID;
+
+    const transaction = contract.methods.pechs(priseID).call();
+    const jsonData = JSON.stringify({ prise : transaction });
+
+    res.json(jsonData);
+ 
 });
 app.post('/addPesheur', async (req, res) => {
 
@@ -258,7 +302,6 @@ app.post('/addPesheur', async (req, res) => {
     const gasPrice = await provider.getFeeData();
     
 
-    try {
       const transaction = contract.methods.closePech(pechId, dateFin,imageFish).encodeABI();
       const receipt = await sendTransaction(AdminPrivKey, {from:AdminAddress, to: contractAddress, data: transaction ,  maxPriorityFeePerGas: web3.utils.toHex(
         Number(gasPrice.maxPriorityFeePerGas)
@@ -269,9 +312,7 @@ app.post('/addPesheur', async (req, res) => {
       ),
       gas: ethers.BigNumber.from(400000).toHexString() });
       res.json({ transactionHash: receipt.transactionHash });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
+    
   });
   
   // Create a fish package (POST request)
@@ -295,6 +336,7 @@ app.post('/addPesheur', async (req, res) => {
       ),
       gas: ethers.BigNumber.from(400000).toHexString() });
       res.json({ transactionHash: receipt.transactionHash });
+      console.log(res)
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -341,6 +383,29 @@ app.post('/addPesheur', async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   });
+  
+  app.post('/ModifierDateDebarquement', async (req, res) => {
+    const _pechId = req.body._pechId;
+    const dateDebarq = req.body.dateDebarq;
+    const gasPrice = await provider.getFeeData();
+
+    try {
+      const transaction = contract.methods.ModDebarquement(_pechId,dateDebarq).encodeABI();
+      const receipt = await sendTransaction(AdminPrivKey, {from:AdminAddress,to: contractAddress, data: transaction  ,  maxPriorityFeePerGas: web3.utils.toHex(
+        Number(gasPrice.maxPriorityFeePerGas)
+      ),
+ 
+      maxFeePerGas: web3.utils.toHex(
+        Number(gasPrice.maxFeePerGas)
+      ),
+      gas: ethers.BigNumber.from(400000).toHexString() });
+      res.json({ transactionHash: receipt.transactionHash });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+
 
   app.post('/prepLotPminPmax', async (req, res) => {
     const lotID = req.body.lotID;

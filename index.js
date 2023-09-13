@@ -109,7 +109,7 @@ app.post('/getLotAndPechData', async (req, res) => {
 
   const lotID = req.body.lotID;
 
-    const transaction = contract.methods.getLotAndPechData(finalPrice,userID,lotID).call();
+    const transaction = contract.methods.getLotAndPechData(lotID).call();
     const [lotData, pecheData] = transaction;
     const jsonData = JSON.stringify({ lot: lotData, peche: pecheData });
 

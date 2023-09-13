@@ -4,6 +4,7 @@ const { ethers } = require('ethers');
 const multer = require("multer");
 const app = express();
 app.use(express.json());
+const moment = require('moment');
 
 // Replace 'YOUR_SMART_CONTRACT_ABI' and 'YOUR_SMART_CONTRACT_ADDRESS' with actual values
 const contractABI = require('./contract.json'); 
@@ -106,14 +107,58 @@ app.post('/recordFishSale', async (req, res) => {
 });
 app.post('/getLotAndPechData', async (req, res) => {
 
-
+  try{
   const lotID = req.body.lotID;
 
-    const transaction = contract.methods.getLotAndPechData(lotID).call();
-    const [lotData, pecheData] = transaction;
-    const jsonData = JSON.stringify({ lot: lotData, peche: pecheData });
+    const transaction = await contract.methods.getLotAndPechData(lotID).call();
+    const pech = transaction[0];
+    const lot = transaction[1];
+    const lotDateDeb = String(lot.dateDeb);
+    const lotDateFin = String(lot.dateFin);
+
+    const datelotDateDeb = new Date(lotDateDeb);
+    const datelotDateFin = new Date(lotDateFin);
+
+
+const formatteddatelotDateDeb = moment(datelotDateDeb).format('YYYY-MM-DD HH:mm:ss');
+const formatteddatelotDateFin = moment(datelotDateFin).format('YYYY-MM-DD HH:mm:ss');
+
+    const jsonData = { lot:{
+      pechId: Number(pech.pechId),
+      temperature: Number(pech.temperature),
+      weight: Number(pech.weight),
+      RFID: pech.RFID,
+      qrcode: pech.qrcode,
+      veterinaryApproval: pech.veterinaryApproval,
+      qualityControlApproval: pech.qualityControlApproval,
+      imageFish: pech.imageFish,
+      minPrice: Number(pech.minPrice),
+      maxPrice: Number(pech.maxPrice) 
+    },pech:{
+      id: lot.id,
+      walletPecheur: lot.pecheur,
+      location: lot.location,
+      engineTitle: lot.engineTitle,
+      enginePhotoHash: lot.enginePhotoHash,
+      engineType:  lot.engineType,
+      dateDeb: formatteddatelotDateDeb,
+      dateFin: formatteddatelotDateFin,
+      closed: lot.closed,
+      imageFish: lot.imageFish,
+      MarayeurWallet: lot.Marayeur,
+      dateDebarquement:Number(lot.deb.dateDebarquement),
+      debarqued:lot.deb.debarqued
+     
+    }
+    };
+      console.log(jsonData);
 
     res.json(jsonData);
+  }
+  catch (err)
+  {
+    res.json(err);
+  }
  
 });
 app.post('/getPrises', async (req, res) => {

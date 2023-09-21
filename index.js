@@ -8,7 +8,7 @@ const moment = require('moment');
 
 // Replace 'YOUR_SMART_CONTRACT_ABI' and 'YOUR_SMART_CONTRACT_ADDRESS' with actual values
 const contractABI = require('./contract.json'); 
-const contractAddress = "0x9a6ce1c15eda1D491FfeD710B40c90aCd0407AB7";
+const contractAddress = "0x4dBfD232cBcaa1d18a1891a9E226bd4e481Af5F2";
 const marketplaceAbi = require('./marketplace.json'); // Replace this with the actual ABI of your FishMarketplace smart contract
 const marketplaceAddress = '0xaAAaD29282Bac09a09835d98cf7E3F8255db5719'; // Replace this with the actual address of your FishMarketplace smart contract
 const traceabilityAddress = contractAddress; // Replace this with the actual address of your FishTraceability smart contract
@@ -105,6 +105,27 @@ app.post('/recordFishSale', async (req, res) => {
     res.json({ transactionHash: receipt.transactionHash });
  
 });
+
+app.post('/getProduitUserId', async (req, res) => {
+
+  const gasPrice = await provider.getFeeData();
+
+  const userID = req.body.userID;
+
+    const transaction = contract.methods.getProduitUserId(userID).encodeABI();
+    const receipt = await sendTransaction(AdminPrivKey, {from:AdminAddress, to: contractAddress, data: transaction,
+    maxPriorityFeePerGas: web3.utils.toHex(
+      Number(gasPrice.maxPriorityFeePerGas)
+    ),
+
+    maxFeePerGas: web3.utils.toHex(
+      Number(gasPrice.maxFeePerGas)
+    ),
+    gas: ethers.BigNumber.from(400000).toHexString() });
+    res.json({ transactionHash: receipt.transactionHash });
+ 
+});
+
 app.post('/getLotAndPechData', async (req, res) => {
 
   try{
@@ -386,15 +407,43 @@ app.post('/addPesheur', async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   });
+  app.post('/changeTempPoidsPrise', async (req, res) => {
+    const _RFID = req.body._RFID;
+    const temperature = req.body.temperature;
+    const weight = req.body.weight;
+    const _qte = req.body._qte;
+
+    
+    const gasPrice = await provider.getFeeData();
+
+    try {
+      const transaction = contract.methods.changeTempPoidsPrise(_RFID,temperature,weight,_qte).encodeABI();
+      const receipt = await sendTransaction(AdminPrivKey, {from:AdminAddress,to: contractAddress, data: transaction  ,  maxPriorityFeePerGas: web3.utils.toHex(
+        Number(gasPrice.maxPriorityFeePerGas)
+      ),
+ 
+      maxFeePerGas: web3.utils.toHex(
+        Number(gasPrice.maxFeePerGas)
+      ),
+      gas: ethers.BigNumber.from(400000).toHexString() });
+      res.json({ transactionHash: receipt.transactionHash });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+
   
   // Approve by veterinary (POST request)
   
   app.post('/refuseByVeterinary', async (req, res) => {
     const packID = req.body.packID;
+    const wallet = req.body.wallet;
+
     const gasPrice = await provider.getFeeData();
 
     try {
-      const transaction = contract.methods.refuseByVeterinary(packID).encodeABI();
+      const transaction = contract.methods.refuseByVeterinary(packID,wallet).encodeABI();
       const receipt = await sendTransaction(AdminPrivKey, {from:AdminAddress,to: contractAddress, data: transaction  ,  maxPriorityFeePerGas: web3.utils.toHex(
         Number(gasPrice.maxPriorityFeePerGas)
       ),
@@ -481,10 +530,12 @@ app.post('/addPesheur', async (req, res) => {
 
   app.post('/approveByVeterinary', async (req, res) => {
     const packID = req.body.packID;
+    const wallet = req.body.wallet;
+
     const gasPrice = await provider.getFeeData();
 
     try {
-      const transaction = contract.methods.approveByVeterinary(packID).encodeABI();
+      const transaction = contract.methods.approveByVeterinary(packID,wallet).encodeABI();
       const receipt = await sendTransaction(AdminPrivKey, {from:AdminAddress,to: contractAddress, data: transaction  ,  maxPriorityFeePerGas: web3.utils.toHex(
         Number(gasPrice.maxPriorityFeePerGas)
       ),
@@ -525,24 +576,95 @@ app.post('/addPesheur', async (req, res) => {
     const packageId = req.body.packageId;
     const price = req.body.price;
     const reductionOffset = req.body.reductionOffset;
-    const gasPrice = await provider.getFeeData();
 
     try {
-      const transaction = marketplaceContract.methods.listPackage(packageId, price, reductionOffset).encodeABI();
-      const receipt = await sendTransaction(AdminPrivKey, {from:AdminAddress,to: marketplaceAddress, data: transaction ,  maxPriorityFeePerGas: web3.utils.toHex(
-        Number(gasPrice.maxPriorityFeePerGas)
-      ),
- 
-      maxFeePerGas: web3.utils.toHex(
-        Number(gasPrice.maxFeePerGas)
-      ),
-      gas: ethers.BigNumber.from(400000).toHexString() });
-      res.json({ transactionHash: receipt.transactionHash });
+      const transaction = marketplaceContract.methods.listPackage(packageId, price, reductionOffset).call();
+      
+      res.json({ data:transaction });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   });
 
+  app.post('/getLotByPrise', async (req, res) => {
+    const packageId = req.body.packageId;
+   
+    try {
+      const transaction = marketplaceContract.methods.getLotByPrise(packageId).call();
+      
+      res.json({ data: transaction });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  
+
+
+  
+  app.post('/getPriseVenduParMarayeur', async (req, res) => {
+    const wallet = req.body.wallet;
+   
+
+    try {
+      const transaction = await contract.methods.getPriseVenduParMarayeur(wallet).call();
+      res.json({ data:transaction });
+      
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+  app.post('/getPriseByPecheur', async (req, res) => {
+    const wallet = req.body.wallet;
+   
+
+    try {
+      const transaction = await contract.methods.getPriseByPesheur(wallet).call();
+      res.json({ data:transaction });
+      
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+  app.post('/getMarayeurs', async (req, res) => {
+   
+
+    try {
+      const transaction = await contract.methods.getMarayeurs().call();
+      res.json({ data:transaction });
+      
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  
+  app.post('/getPriseByMarayeur', async (req, res) => {
+    const wallet = req.body.wallet;
+   
+
+    try {
+      const transaction = await contract.methods.getPriseByMarayeur(wallet).call();
+      res.json({ data:transaction });
+      
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+  
+
+  app.post('/getLotsByVeterinary', async (req, res) => {
+    const wallet = req.body.wallet;
+   
+
+    try {
+      const transaction = await contract.methods.getLotsByVeterinary(wallet).call();
+      res.json({ data:transaction });
+      
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
   app.post('/getPesheurFWallet', async (req, res) => {
     const wallet = req.body.wallet;
    

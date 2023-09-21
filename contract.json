@@ -107,9 +107,14 @@
 				"internalType": "string",
 				"name": "_packid",
 				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "_Veterinary",
+				"type": "address"
 			}
 		],
-		"name": "approveByQualityManager",
+		"name": "approveByVeterinary",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -118,11 +123,26 @@
 		"inputs": [
 			{
 				"internalType": "string",
-				"name": "_packid",
+				"name": "_RFID",
 				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "temperature",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "weight",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_qte",
+				"type": "uint256"
 			}
 		],
-		"name": "approveByVeterinary",
+		"name": "changeTempPoidsPrise",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -390,6 +410,11 @@
 				"internalType": "string",
 				"name": "_packid",
 				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "_Veterinary",
+				"type": "address"
 			}
 		],
 		"name": "refuseByVeterinary",
@@ -413,6 +438,30 @@
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "a",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "b",
+				"type": "string"
+			}
+		],
+		"name": "compareStrings",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "pure",
 		"type": "function"
 	},
 	{
@@ -474,6 +523,33 @@
 				"internalType": "uint256",
 				"name": "maxPrice",
 				"type": "uint256"
+			},
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "Pesheur",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "Veterinary",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "marayeur",
+						"type": "address"
+					}
+				],
+				"internalType": "struct FishUtils.Validation",
+				"name": "valid",
+				"type": "tuple"
+			},
+			{
+				"internalType": "uint256",
+				"name": "qte",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -503,6 +579,11 @@
 				"internalType": "string",
 				"name": "lotId",
 				"type": "string"
+			},
+			{
+				"internalType": "bool",
+				"name": "na",
+				"type": "bool"
 			}
 		],
 		"stateMutability": "view",
@@ -569,9 +650,36 @@
 						"internalType": "uint256",
 						"name": "maxPrice",
 						"type": "uint256"
+					},
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "Pesheur",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "Veterinary",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "marayeur",
+								"type": "address"
+							}
+						],
+						"internalType": "struct FishUtils.Validation",
+						"name": "valid",
+						"type": "tuple"
+					},
+					{
+						"internalType": "uint256",
+						"name": "qte",
+						"type": "uint256"
 					}
 				],
-				"internalType": "struct FishTraceability.FishPackage",
+				"internalType": "struct FishUtils.FishPackage",
 				"name": "",
 				"type": "tuple"
 			},
@@ -645,14 +753,641 @@
 								"type": "bool"
 							}
 						],
-						"internalType": "struct FishTraceability.debarquement",
+						"internalType": "struct FishUtils.debarquement",
 						"name": "deb",
 						"type": "tuple"
 					}
 				],
-				"internalType": "struct FishTraceability.Pech",
+				"internalType": "struct FishUtils.Pech",
 				"name": "",
 				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "priseID",
+				"type": "string"
+			}
+		],
+		"name": "getLotByPrise",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "pechId",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "temperature",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "weight",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "RFID",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "qrcode",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "veterinaryApproval",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "qualityControlApproval",
+						"type": "bool"
+					},
+					{
+						"internalType": "string",
+						"name": "imageFish",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "minPrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "maxPrice",
+						"type": "uint256"
+					},
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "Pesheur",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "Veterinary",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "marayeur",
+								"type": "address"
+							}
+						],
+						"internalType": "struct FishUtils.Validation",
+						"name": "valid",
+						"type": "tuple"
+					},
+					{
+						"internalType": "uint256",
+						"name": "qte",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct FishUtils.FishPackage[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_veterinaryWallet",
+				"type": "address"
+			}
+		],
+		"name": "getLotsByVeterinary",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "pechId",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "temperature",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "weight",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "RFID",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "qrcode",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "veterinaryApproval",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "qualityControlApproval",
+						"type": "bool"
+					},
+					{
+						"internalType": "string",
+						"name": "imageFish",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "minPrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "maxPrice",
+						"type": "uint256"
+					},
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "Pesheur",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "Veterinary",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "marayeur",
+								"type": "address"
+							}
+						],
+						"internalType": "struct FishUtils.Validation",
+						"name": "valid",
+						"type": "tuple"
+					},
+					{
+						"internalType": "uint256",
+						"name": "qte",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct FishUtils.FishPackage[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getMarayeurs",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "lastName",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "wallet",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "MarayeurID",
+						"type": "string"
+					}
+				],
+				"internalType": "struct FishUtils.Marayeur[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_MarayeurWallet",
+				"type": "address"
+			}
+		],
+		"name": "getPriseByMarayeur",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "id",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "pecheur",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "location",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "engineTitle",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "enginePhotoHash",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "engineType",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "dateDeb",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "dateFin",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "closed",
+						"type": "bool"
+					},
+					{
+						"internalType": "string",
+						"name": "imageFish",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "Marayeur",
+						"type": "address"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "dateDebarquement",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "debarqued",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct FishUtils.debarquement",
+						"name": "deb",
+						"type": "tuple"
+					}
+				],
+				"internalType": "struct FishUtils.Pech[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_PesheurWallet",
+				"type": "address"
+			}
+		],
+		"name": "getPriseByPesheur",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "id",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "pecheur",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "location",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "engineTitle",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "enginePhotoHash",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "engineType",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "dateDeb",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "dateFin",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "closed",
+						"type": "bool"
+					},
+					{
+						"internalType": "string",
+						"name": "imageFish",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "Marayeur",
+						"type": "address"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "dateDebarquement",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "debarqued",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct FishUtils.debarquement",
+						"name": "deb",
+						"type": "tuple"
+					}
+				],
+				"internalType": "struct FishUtils.Pech[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "wallet",
+				"type": "address"
+			}
+		],
+		"name": "getPriseVenduParMarayeur",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "id",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "pecheur",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "location",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "engineTitle",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "enginePhotoHash",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "engineType",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "dateDeb",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "dateFin",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "closed",
+						"type": "bool"
+					},
+					{
+						"internalType": "string",
+						"name": "imageFish",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "Marayeur",
+						"type": "address"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "dateDebarquement",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bool",
+								"name": "debarqued",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct FishUtils.debarquement",
+						"name": "deb",
+						"type": "tuple"
+					}
+				],
+				"internalType": "struct FishUtils.Pech[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "userID",
+				"type": "string"
+			}
+		],
+		"name": "getProduitUserId",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "pechId",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "temperature",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "weight",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "RFID",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "qrcode",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "veterinaryApproval",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "qualityControlApproval",
+						"type": "bool"
+					},
+					{
+						"internalType": "string",
+						"name": "imageFish",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "minPrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "maxPrice",
+						"type": "uint256"
+					},
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "Pesheur",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "Veterinary",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "marayeur",
+								"type": "address"
+							}
+						],
+						"internalType": "struct FishUtils.Validation",
+						"name": "valid",
+						"type": "tuple"
+					},
+					{
+						"internalType": "uint256",
+						"name": "qte",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct FishUtils.FishPackage[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "MarayeursAddress",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -686,6 +1421,25 @@
 			{
 				"internalType": "string",
 				"name": "MarayeurID",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "packagesID",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
 				"type": "string"
 			}
 		],
@@ -770,7 +1524,7 @@
 						"type": "bool"
 					}
 				],
-				"internalType": "struct FishTraceability.debarquement",
+				"internalType": "struct FishUtils.debarquement",
 				"name": "deb",
 				"type": "tuple"
 			}
@@ -806,6 +1560,44 @@
 			{
 				"internalType": "string",
 				"name": "pesheurID",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "PrisesID",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"name": "RFIDs",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
 				"type": "string"
 			}
 		],

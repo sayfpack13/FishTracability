@@ -8,7 +8,7 @@ const moment = require('moment');
 
 // Replace 'YOUR_SMART_CONTRACT_ABI' and 'YOUR_SMART_CONTRACT_ADDRESS' with actual values
 const contractABI = require('./contract.json'); 
-const contractAddress = "0xadaED2193f5673D3144269d95016e5b3DcD494f1";
+const contractAddress = "0xe82B9aCa1AD52B307c8bAd89EF3D5f3f994b6A60";
 const marketplaceAbi = require('./marketplace.json'); // Replace this with the actual ABI of your FishMarketplace smart contract
 const marketplaceAddress = '0xaAAaD29282Bac09a09835d98cf7E3F8255db5719'; // Replace this with the actual address of your FishMarketplace smart contract
 const traceabilityAddress = contractAddress; // Replace this with the actual address of your FishTraceability smart contract

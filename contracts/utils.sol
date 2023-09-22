@@ -267,13 +267,13 @@ contract FishUtils {
     return Pecks;
      }
     function approveByVeterinary(string memory _packid,address _Veterinary) public onlyAdmin {
-        require(fishPackages[_packid].valid.Veterinary != address(0));
+        require(fishPackages[_packid].valid.Veterinary == address(0));
         
         fishPackages[_packid].veterinaryApproval = true;
         fishPackages[_packid].valid.Veterinary = _Veterinary;
     }
     function refuseByVeterinary(string memory _packid,address _Veterinary) public onlyAdmin {
-        require(fishPackages[_packid].valid.Veterinary != address(0));
+        require(fishPackages[_packid].valid.Veterinary == address(0));
         
         fishPackages[_packid].veterinaryApproval = false;
         fishPackages[_packid].valid.Veterinary = _Veterinary;

@@ -2,19 +2,12 @@
 pragma solidity ^0.8.17;
 import "./utils.sol";
 contract FishTraceability is FishUtils{
-
-    
-    
-    
-   
     constructor() {
         admin = msg.sender;
     }
    
    
     function addMar(address wallet,string memory _name, string memory _lastName,string memory MId) public onlyAdmin {
-        
-        
         Mars[wallet] = Marayeur(_name, _lastName,wallet,MId);
         MarayeursAddress[MarIndex] = wallet;
         MarIndex++;
@@ -73,7 +66,6 @@ contract FishTraceability is FishUtils{
     }
     
     function closePech(string memory _pechId, uint256 _dateFin,string memory _imageFish) public onlyAdmin {
-        require(pechs[_pechId].closed == false);
         
         pechs[_pechId].dateFin = _dateFin;
         pechs[_pechId].closed = true;
@@ -89,14 +81,11 @@ contract FishTraceability is FishUtils{
     function affecterPechToMarayeur(string memory pechID,address _marrayeur) public onlyAdmin {
         pechs[pechID].Marayeur = _marrayeur;
     }
-    function createFishPackage(string memory _pechId,string memory packageID,uint256 _temperature, uint256 _weight, string memory _RFID, string memory _qrcode,string memory imageFish) public onlyAdmin {
-        require(bytes(pechs[_pechId].location).length != 0);
-        require(pechs[_pechId].closed == true);
-        require(bytes(_RFID).length != 0);
-        require(bytes(_qrcode).length != 0);
+    function createFishPackage(string memory _pechId,string memory packageID,uint256 _temperature, uint256 _weight, string memory rfid, string memory _qrcode,string memory imageFish) public onlyAdmin {
+       
         Validation memory v = Validation(address(0),address(0),address(0));
-        fishPackages[packageID] = FishPackage(_pechId, _temperature, _weight, _RFID, _qrcode, false, false,imageFish,0,0,v,0);
-        RFIDs[_RFID] = packageID;
+        fishPackages[packageID] = FishPackage(packageID,_pechId, _temperature, _weight, rfid, _qrcode, false,imageFish,0,0,v,0);
+        RFIDs[rfid] = packageID;
 
         packagesID[indexPackage] = packageID;
         indexPackage++;

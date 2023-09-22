@@ -8,7 +8,7 @@ const moment = require('moment');
 
 // Replace 'YOUR_SMART_CONTRACT_ABI' and 'YOUR_SMART_CONTRACT_ADDRESS' with actual values
 const contractABI = require('./contract.json'); 
-const contractAddress = "0x4dBfD232cBcaa1d18a1891a9E226bd4e481Af5F2";
+const contractAddress = "0xadaED2193f5673D3144269d95016e5b3DcD494f1";
 const marketplaceAbi = require('./marketplace.json'); // Replace this with the actual ABI of your FishMarketplace smart contract
 const marketplaceAddress = '0xaAAaD29282Bac09a09835d98cf7E3F8255db5719'; // Replace this with the actual address of your FishMarketplace smart contract
 const traceabilityAddress = contractAddress; // Replace this with the actual address of your FishTraceability smart contract
@@ -108,22 +108,30 @@ app.post('/recordFishSale', async (req, res) => {
 
 app.post('/getProduitUserId', async (req, res) => {
 
-  const gasPrice = await provider.getFeeData();
 
   const userID = req.body.userID;
 
-    const transaction = contract.methods.getProduitUserId(userID).encodeABI();
-    const receipt = await sendTransaction(AdminPrivKey, {from:AdminAddress, to: contractAddress, data: transaction,
-    maxPriorityFeePerGas: web3.utils.toHex(
-      Number(gasPrice.maxPriorityFeePerGas)
-    ),
-
-    maxFeePerGas: web3.utils.toHex(
-      Number(gasPrice.maxFeePerGas)
-    ),
-    gas: ethers.BigNumber.from(400000).toHexString() });
-    res.json({ transactionHash: receipt.transactionHash });
- 
+    const transaction = await contract.methods.getProduitUserId(userID).call();
+    const jsons = transaction.map((ret)=> {return{
+      pechId: ret.pechId,
+      temperature: Number(ret.temperature),
+      weight: Number(ret.weight),
+      RFID: ret[4],
+      qrcode: ret.qrcode,
+      veterinaryApproval: ret.veterinaryApproval,
+      qualityControlApproval: ret.qualityControlApproval,
+      imageFish: ret.imageFish,
+      minPrice: Number(ret.minPrice),
+      maxPrice: Number(ret.maxPrice),
+      
+        Veterinary: ret.valid.Veterinary,
+      
+      qte: Number(ret.qte)
+    
+    
+    }
+  })
+    res.json(jsons);
 });
 
 app.post('/getLotAndPechData', async (req, res) => {
@@ -392,7 +400,7 @@ app.post('/addPesheur', async (req, res) => {
     const packageID = req.body.packageID;
     const gasPrice = await provider.getFeeData();
     try {
-      const transaction = contract.methods.createFishPackage(pechId,packageID, temperature, weight, RFID, qrcode,imageFish).encodeABI();
+      const transaction = contract.methods.createFishPackage(packageID,pechId, temperature, weight, RFID, qrcode,imageFish).encodeABI();
       const receipt = await sendTransaction(AdminPrivKey, {from:AdminAddress, to: contractAddress, data: transaction ,  maxPriorityFeePerGas: web3.utils.toHex(
         Number(gasPrice.maxPriorityFeePerGas)
       ),
@@ -587,12 +595,30 @@ app.post('/addPesheur', async (req, res) => {
   });
 
   app.post('/getLotByPrise', async (req, res) => {
-    const packageId = req.body.packageId;
+    const priseId = req.body.priseId;
    
     try {
-      const transaction = marketplaceContract.methods.getLotByPrise(packageId).call();
+      const transaction = await contract.methods.getLotByPrise(priseId).call();
+      const jsons = transaction.map((ret)=> {return{
+        pechId: ret.pechId,
+        temperature: Number(ret.temperature),
+        weight: Number(ret.weight),
+        RFID: ret[4],
+        qrcode: ret.qrcode,
+        veterinaryApproval: ret.veterinaryApproval,
+        qualityControlApproval: ret.qualityControlApproval,
+        imageFish: ret.imageFish,
+        minPrice: Number(ret.minPrice),
+        maxPrice: Number(ret.maxPrice),
+        
+          Veterinary: ret.valid.Veterinary,
+        
+        qte: Number(ret.qte)
       
-      res.json({ data: transaction });
+      
+      }
+    })
+      res.json(jsons);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -607,9 +633,31 @@ app.post('/addPesheur', async (req, res) => {
    
 
     try {
+      const jsons=[];
       const transaction = await contract.methods.getPriseVenduParMarayeur(wallet).call();
-      res.json({ data:transaction });
+      for(var i=0; i < transaction.length ; i++)
+      {
+        const ret =transaction[i]
+        jsons.push({
+          id: ret.id,
+          pecheur: ret.pecheur,
+          location: ret.location,
+          engineTitle: ret.engineTitle,
+          enginePhotoHash: ret.enginePhotoHash,
+          engineType: ret.engineType,
+          dateDeb: Number(ret.dateDeb),
+          dateFin: Number(ret.dateFin),
+          closed: ret.closed,
+          imageFish: ret.imageFish,
+          Marayeur: ret.Marayeur,
+          dateDebarquement : Number(ret.deb.dateDebarquement),
+          debarqued:Number(ret.deb.debarqued)
+  
+       
+        })
+      }
       
+      res.json(jsons);      
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -619,18 +667,40 @@ app.post('/addPesheur', async (req, res) => {
    
 
     try {
+      const jsons=[];
       const transaction = await contract.methods.getPriseByPesheur(wallet).call();
-      res.json({ data:transaction });
+      for(var i=0; i < transaction.length ; i++)
+      {
+        const ret =transaction[i]
+        jsons.push({
+          id: ret.id,
+          pecheur: ret.pecheur,
+          location: ret.location,
+          engineTitle: ret.engineTitle,
+          enginePhotoHash: ret.enginePhotoHash,
+          engineType: ret.engineType,
+          dateDeb: Number(ret.dateDeb),
+          dateFin: Number(ret.dateFin),
+          closed: ret.closed,
+          imageFish: ret.imageFish,
+          Marayeur: ret.Marayeur,
+          dateDebarquement : Number(ret.deb.dateDebarquement),
+          debarqued:Number(ret.deb.debarqued)
+  
+       
+        })
+      }
+      
+      res.json(jsons);
       
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   });
   app.post('/getMarayeurs', async (req, res) => {
-   
-
     try {
       const transaction = await contract.methods.getMarayeurs().call();
+      console.log(transaction)
       res.json({ data:transaction });
       
     } catch (error) {
@@ -644,8 +714,31 @@ app.post('/addPesheur', async (req, res) => {
    
 
     try {
+      const jsons=[];
       const transaction = await contract.methods.getPriseByMarayeur(wallet).call();
-      res.json({ data:transaction });
+      for(var i=0; i < transaction.length ; i++)
+      {
+        const ret =transaction[i]
+        jsons.push({
+          id: ret.id,
+          pecheur: ret.pecheur,
+          location: ret.location,
+          engineTitle: ret.engineTitle,
+          enginePhotoHash: ret.enginePhotoHash,
+          engineType: ret.engineType,
+          dateDeb: Number(ret.dateDeb),
+          dateFin: Number(ret.dateFin),
+          closed: ret.closed,
+          imageFish: ret.imageFish,
+          Marayeur: ret.Marayeur,
+          dateDebarquement : Number(ret.deb.dateDebarquement),
+          debarqued:Number(ret.deb.debarqued)
+  
+       
+        })
+      }
+      
+      res.json(jsons);
       
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -657,13 +750,29 @@ app.post('/addPesheur', async (req, res) => {
     const wallet = req.body.wallet;
    
 
-    try {
       const transaction = await contract.methods.getLotsByVeterinary(wallet).call();
-      res.json({ data:transaction });
-      
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+      console.log(transaction)
+      const jsons = transaction.map((ret)=> { return{
+        pechId: ret.pechId,
+        temperature: Number(ret.temperature),
+        weight: Number(ret.weight),
+        RFID: ret[4],
+        qrcode: ret.qrcode,
+        veterinaryApproval: ret.veterinaryApproval,
+        qualityControlApproval: ret.qualityControlApproval,
+        imageFish: ret.imageFish,
+        minPrice: Number(ret.minPrice),
+        maxPrice: Number(ret.maxPrice),
+        
+          Veterinary: ret.valid.Veterinary,
+        
+        qte: Number(ret.qte)
+      }
     }
+      )
+      res.json(jsons);
+      
+   
   });
   app.post('/getPesheurFWallet', async (req, res) => {
     const wallet = req.body.wallet;

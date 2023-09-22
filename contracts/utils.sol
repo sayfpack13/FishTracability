@@ -28,13 +28,13 @@ contract FishUtils {
         address marayeur;
     }
     struct FishPackage {
+        string id;
         string pechId;
         uint256 temperature;
         uint256 weight;
         string RFID;
         string qrcode;
         bool veterinaryApproval;
-        bool qualityControlApproval;
         string imageFish;
         uint256 minPrice;
         uint256 maxPrice;
@@ -84,19 +84,9 @@ contract FishUtils {
     uint VetIndex;
     uint MarIndex;
     uint PecheurIndex;
- function isOnArray(Pech[] memory Peching,Pech memory p) pure private  returns (bool)
-    {
-        for (uint i = 0; i < Peching.length ; i++) {
-            if (compareStrings(Peching[i].id,p.id))
-            {
-                return true;
-            }
 
-        }   
-        return false;
-    }
     modifier onlyAdmin() {
-        require(msg.sender == admin, "Admin need");
+        require(msg.sender == admin);
         _;
     }
     function compareStrings(string memory a, string memory b) public pure returns (bool) {
@@ -118,8 +108,8 @@ contract FishUtils {
 
 
     }
-        function changeTempPoidsPrise(string memory _RFID,uint256 temperature,uint256 weight,uint256 _qte) public onlyAdmin {
-        string memory idPak = RFIDs[_RFID];
+        function changeTempPoidsPrise(string memory rfid,uint256 temperature,uint256 weight,uint256 _qte) public onlyAdmin {
+        string memory idPak = RFIDs[rfid];
         FishPackage memory fp = fishPackages[idPak];
         fp.temperature = temperature;
         fp.weight = weight;
@@ -232,7 +222,7 @@ contract FishUtils {
         // Check if the package is approved by the specified veterinary
             Pech memory p  = pechs[pA.pechId];
 
-            if (p.Marayeur == wallet &&  isOnArray(Peching,p))
+            if (p.Marayeur == wallet)
             {
             Peching[count] = p;
             count++;
@@ -272,12 +262,6 @@ contract FishUtils {
         fishPackages[_packid].veterinaryApproval = true;
         fishPackages[_packid].valid.Veterinary = _Veterinary;
     }
-    function refuseByVeterinary(string memory _packid,address _Veterinary) public onlyAdmin {
-        require(fishPackages[_packid].valid.Veterinary == address(0));
-        
-        fishPackages[_packid].veterinaryApproval = false;
-        fishPackages[_packid].valid.Veterinary = _Veterinary;
-
-    }
+   
     
 }

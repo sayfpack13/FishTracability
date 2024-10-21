@@ -78,7 +78,7 @@ contract FishMarketplace {
     }
 
     function getPackageData(string memory _packageId) public view returns (
-        uint256 pechId,
+        string  pechId,
         uint256 temperature,
         uint256 weight,
         string memory RFID,
